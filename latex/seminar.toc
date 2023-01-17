@@ -1,0 +1,8 @@
+\babel@toc {croatian}{}\relax 
+\contentsline {chapter}{Popis slika}{ii}{chapter*.2}%
+\contentsline {chapter}{Popis isječaka koda}{ii}{chapter*.2}%
+\contentsline {chapter}{Popis tablica}{iv}{chapter*.4}%
+\contentsline {chapter}{\numberline {1}Uvod}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Main}{2}{chapter.2}%
+\contentsline {chapter}{\numberline {3}Zaključak}{3}{chapter.3}%
+\contentsline {chapter}{\numberline {4}Literatura}{4}{chapter.4}%
