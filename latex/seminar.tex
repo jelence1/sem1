@@ -1,4 +1,4 @@
-\documentclass[times, utf8, seminar]{fer}
+\documentclass[times, utf8, seminar, numeric]{fer}
 
 \usepackage{booktabs}
 \usepackage{listings}
@@ -44,13 +44,13 @@
 
 \lstset{style=mystyle}
 
-\renewcommand*{\lstlistingname}{Isječak koda}
-\renewcommand*\lstlistlistingname{Popis isječaka koda}
+%\renewcommand*{\lstlistingname}{Isječak koda}
+%\renewcommand*\lstlistlistingname{Popis isječaka koda}
 
 \begin{document}
 
 % TODO: Navedite naslov rada.
-\title{Naslov}
+\title{Mogućnosti i ograničenja razvojnog sustava ESP32-C3-DevKitM-1 u razvoju Bluetooth aplikacija}
 
 % TODO: Navedite vaše ime i prezime.
 \author{Jelena Gavran}
@@ -65,25 +65,27 @@
 \begingroup
 \renewcommand*\listfigurename{Popis slika}
 \listoffigures
-\addcontentsline{toc}{chapter}{\lstlistlistingname}
-\lstlistoflistings
-\listoftables
+%\addcontentsline{toc}{chapter}{\lstlistlistingname}
+%\lstlistoflistings
+%\listoftables
 \endgroup
 
 
 \include{Uvod}
-\include{main}
+\include{ESP32}
+\include{APIs}
+\include{Usporedba}
 \include{Zakljucak}
 
 
 \bibliography{literatura}
 \bibliographystyle{fer}
 
-\title{NASLOV SEMINARA}
+\title{Mogućnosti i ograničenja razvojnog sustava ESP32-C3-DevKitM-1 u razvoju Bluetooth aplikacija}
 \begin{sazetak}
 	TEKST SEMINARA 
 	
-	\kljucnerijeci{ESP32-C3-DevKitM-1, Classic BT, BLE}
+	\kljucnerijeci{ESP32-C3-DevKitM-1, BLE, Bluetooth API}
 \end{sazetak}
 
 \end{document}
