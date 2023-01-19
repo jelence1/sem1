@@ -1,6 +1,6 @@
 \chapter{Razvojni sustav ESP32-C3-DevKitM-1}
 
-Razvojni sustav temelji se na modulu ESP32-C3-MINI-1. Modul je jedan u nizu ESP32-­C3 serije SoC (engl. \textit{System on Chip}) platformi tvrtke \textit{Espressif}, te sadrži jednojezgreni 32-bitni procesor s RISC-V arhitekturom koji radi na frekvenciji do 160 MHz. Modul sadrži 400 KB memorije tipa SRAM (engl. \textit{Static random-access memory}), od kojih je 16 KB rezervirano za priručnu memoriju (engl. \textit{cache}), 384 MB memorije tipa ROM (engl. \textit{Read-only memory}) te 4 MB memorije tipa \textit{Flash}. Od periferije sadrži 22 programabilna GPIO pina (engl. \textit{General Purpose Input Output}), te digitalna sučelja SPI, UART, I2C i I2S. Također sadrži upravljače za sučelja USB i JTAG, koji se mogu koristiti za efikasnije otklanjanje pogrešaka u kodu (engl. \textit{debugging}). \cite{esp32manual} Konfiguracija sustava prikazana je na slici \ref{fig:esp32}.
+Razvojni sustav temelji se na modulu ESP32-C3-MINI-1. Modul je jedan u nizu ESP32-­C3 serije SoC (engl. \textit{System on Chip}) platformi tvrtke \textit{Espressif}, te sadrži jednojezgreni 32-bitni procesor s RISC-V arhitekturom koji radi na frekvenciji do 160 MHz. Modul sadrži 400 KB memorije tipa SRAM (engl. \textit{Static random-access memory}), od kojih je 16 KB rezervirano za priručnu memoriju (engl. \textit{cache}), 384 MB memorije tipa ROM (engl. \textit{Read-only memory}) te 4 MB memorije tipa \textit{Flash}. Od periferije sadrži 22 programabilna GPIO pina (engl. \textit{General Purpose Input Output}), te digitalna sučelja SPI, UART, I2C i I2S. Također sadrži upravljače za sučelja USB i JTAG koji se mogu koristiti za efikasnije otklanjanje pogrešaka u kodu (engl. \textit{debugging}). \cite{esp32manual} Konfiguracija sustava prikazana je na slici \ref{fig:esp32}.
 
 \begin{figure}[ht]
 	\centering
@@ -11,7 +11,7 @@ Razvojni sustav temelji se na modulu ESP32-C3-MINI-1. Modul je jedan u nizu ESP3
 
 Budući da modul ima funkciju RF (engl. \textit{radio frequency}) primopredajnika, podržava protokol Bluetooth s podrškom za velike udaljenosti. Druga važna značajka je podsustav za Wi-Fi, koji omogućava propusnost do 20 MBit/s protokolom TCP te maksimalnu propusnost od 30 MBit/s koristeći protokol UDP. 
 
-Modul ESP32-C3-MINI-1 je bežični uređaj niske potrošnje energije (engl. ultra-low-power) primarno namijenjen razvoju aplikacija koje koriste Bluetooth Low Energy (BLE) protokol ili Wi-Fi. Na slici \ref{fig:esp32block} nalazi se blok shema modula sa svim dostupnim značajkama.
+Modul ESP32-C3-MINI-1 je bežični uređaj niske potrošnje energije (engl. ultra-low-power) primarno namijenjen razvoju aplikacija koje koriste \textit{Bluetooth Low Energy} (BLE) protokol ili Wi-Fi. Na slici \ref{fig:esp32block} nalazi se blok shema modula sa svim dostupnim značajkama.
 
 \begin{figure}[ht]
 	\centering
@@ -22,10 +22,61 @@ Modul ESP32-C3-MINI-1 je bežični uređaj niske potrošnje energije (engl. ultr
 
 \section{BLE protokol}
 
-BLE je vrsta bežične komunikacije namijenjena komunikaciji kratkog dometa s niskom potrošnjom energije. Razvijen je kako bi se postigao standard vrlo male snage koji radi s baterijom veličine kovanice (engl. \textit{coin-cell batteries}) nekoliko godina. U odnosu na proizvode koji koriste klasičnu Bluetooth tehnologiju, BLE uređaji troše samo dio energije te omogućavaju malenim uređajima s malim baterijama bežično povezivanje s uređajima koji koriste klasični Bluetooth. \cite{blevsbluetooth}
+BLE je vrsta bežične komunikacije namijenjena komunikaciji kratkog dometa s niskom potrošnjom energije. Razvijen je kako bi se postigao standard vrlo male snage koji radi s baterijom veličine kovanice (engl. \textit{coin-cell batteries}) nekoliko godina. U odnosu na proizvode koji koriste klasičnu Bluetooth tehnologiju, BLE uređaji troše samo dio energije te omogućavaju malenim uređajima s malim baterijama bežično povezivanje s uređajima koji koriste Bluetooth. BLE protokol ostvaruje nisku potrošnju tako što boravi u stanju mirovanja dok nije povezan s drugim uređajima. Zbog toga može prenositi male količine podataka u kratkom vremenskom periodu. \cite{blevsbluetooth}
 
 BLE radi u istom opsegu od 2,4 GHz kao i standardni Bluetooth, no koristi različite kanale od standardnog Bluetootha. Koristi 40 kanala od 2 MHz za prijenos podataka korištenjem modulacije Gaussova pomaka frekvencije (metoda koja se koristi za glatkije prijelaze između podatkovnih impulsa), zbog čega skokovi frekvencije proizvode manje smetnji u usporedbi sa standardnom Bluetooth komunikacijom.
 
-Atributi su adresirani dijelovi informacija koji mogu sadržavati korisničke podatke ili meta-informacije o arhitekturi samih atributa, te se koriste za razmjenu informacija između dva uređaja putem BLE sučelja. Uređaj koji prikazuje atribute naziva se poslužiteljem, a uređaj koji ih koristi naziva se klijentom. 
+BLE je tehnologija adaptivnog skakanja frekvencije (engl. \textit{Adaptive frequency hopping} - AFH) koja može koristiti samo podskup svih dostupnih frekvencija kako bi se izbjegle sve frekvencije koje koriste druge neprilagodljive tehnologije. To omogućuje prelazak s lošeg kanala na poznati dobar kanal korištenjem specifičnog algoritma za skakanje frekvencije, koji određuje sljedeći dobar kanal za korištenje. 
+
+Arhitektura BLE tehnologije naziva se još i BLE stog zbog slojevite strukture. Stog se sastoji od dvije glavne komponente: BLE upravljač (engl. \textit{controller}), koji prenosi podatke, te BLE domaćin (engl. \textit{host}), koji definira odnos povezanih uređaja. Prikaz arhitekture stoga nalazi se na slici \ref{fig:ble_stack}.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.8]{imgs/ble\_stack}
+	\caption{Arhitektura BLE stoga \cite{espressif}}
+	\label{fig:ble_stack}
+\end{figure}
+
+Osnovni profil koji implementiraju svi Bluetooth uređaji naziva se generički profil pristupa (GAP), koji pruža puni standardni okvir za kontrolu BLE uređaja u komunikacijskim metodama od točke do točke (engl. \textit{point-to-point}) i emitiranju podataka. Profil definira kako BLE uređaji mogu otkriti druge uređaje i povezati se s njima te kako uspostaviti sigurnosti privatnost preko veze. Također detaljno opisuje na koji način uređaji mogu biti odašiljači i promatrači te prenositi podatke bez da su u stanju veze, odnosno bez direktne povezanosti s drugim uređajem (emitiranje podataka). Postoje četiri uloge GAP profila:
+
+\begin{itemize}
+	\item emiter (engl. \textit{broadcaster}): šalje oglase,
+	\item promatrač (engl. \textit{observer}): prima oglase,
+	\item periferija (engl. \textit{peripheral}): uvijek u načinu oglašavanja i u ulozi \textit{slave}, 
+	\item centar (engl. \textit{central}): nikada ne šalje oglase, uvijek u \textit ulozi {master}.
+\end{itemize}
+
+Generički atributni profil (GATT) odgovoran je za razmjenu podataka i određuje njihovu strukturu. Definira dvije uloge uređaja, GATT poslužitelj i GATT klijent. BLE uređaj može implementirati samo jednu, ili pak istovremeno obje uloge.
+
+GATT poslužitelj najčešće je implementiran u ugradbenom računalu. Poslužitelj implementira tablicu atributa (adresirani dijelovi informacija) strukturiranu u obliku usluga i karakteristika; točnije, sadrži korisne podatke kojima može pristupiti udaljeni klijent. Usluge su skupine karakteristika, odnosno korisničkih podataka koje uređaj želi poslati. Na slici \ref{fig:ble_profile_char} prikazana je opisana hijerarhijska struktura. 
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.4]{imgs/ble\_profile\_char}
+	\caption{Struktura paketa koji se šalju BLE protokolom \cite{ble_profile_char}}
+	\label{fig:ble_profile_char}
+\end{figure}
+
+
+BLE protokol nudi tri komunikacijske mogućnosti različitih topologija veze. Prikazane su na slici \ref{fig:ble_com_options}. 
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.4]{imgs/ble\_com\_options}
+	\caption{Komunikacijske mogućnosti u BLE-u \cite{ble_profiles}}
+	\label{fig:ble_com_options}
+\end{figure}
+
+Prva i najraširenija metoda jest od točke do točke (engl. \textit{point-to-point}). Koristi se u uređajima gdje je povezivanje 1:1, odnosno gdje je moguće međusobno spajanje samo dva uređaja. Većina uređaja u svakodnevnoj uporabi koriste ovu topologiju, primjerice zvučnici, pametne igračke, satovi i uređaji za praćenje zdravlja. Također se naziva i komunikacijom usmjerenom na povezivanje (engl. \textit{connection-oriented communication}), budući da se temelji na povezivanju dvaju uređaja. Iako početna verzija ove metode dopušta spajanje samo dva uređaja, nove verzije protokola omogućuju vezu n:1, što omogućava spajanje više uređaja na jedan centralni uređaj. Razlikuje se od metode emitiranja podataka zbog uloge čvorova u spoju. BLE stog podržava sigurnosnu zaštitu za ovu vrstu topologije 128-bitnim AES algoritmom, no ovom je metodom spajanja zaštita opcionalna. 
+
+U ovom načinu povezivanja uređaji implementiraju jednu od dvije uloge GAP profila, a to su centar i periferija. Centralni je uređaj najčešće onaj koji troši više resursa, primjerice računalo ili mobitel, dok je periferni uređaj ugradbeno računalo s niskom potrošnjom. Nove verzije protokola podržavaju spajanje više perifernih uređaja na centralni. Središnji uređaj nikada ne šalje oglase te je u ulozi \textit{master}, dok je periferni uređaj u ulozi \textit{slave} i uvijek je u načinu oglašavanja. 
+
+Iduća metoda je emitiranje podataka (engl. \textit{data broadcast}), čija je topologija povezivanja 1:n. Emitiranje podataka naziva se još i komunikacijom bez povezivanja. Ovo je jednosmjerna metoda komunikacije gdje uređaj emitira svoje podatke svim susjednim uređajima u RF rasponu. Također se koristi za usluge lokacije niske točnosti (margina pogreške od 1,5 metra), primjerice osnovna navigacija u zatvorenom prostoru i pronalaženje puta. Centralni čvor koji emitira podatke još se naziva i BLE odašiljačem. Arhitektura BLE protokola ne podržava sigurnost ovakve vrste povezivanja, no sigurnosni algoritmi se po potrebi mogu implementirati u aplikacijskom sloju. 
+
+Ovaj način povezivanja podržava uloge emitera i promatrača. Pri emitiranju podataka, središnji čvor odnosno odašiljač isporučuje podatke jednosmjernom vezom. Šalje reklamne pakete s podacima u ulozi oglašivača, dok promatrači skeniraju reklamne pakete i tako primaju podatke. Konfiguracija emitiranja podataka najprikladnija je za senzore koji otvoreno emitiraju svoje javne podatke svim zainteresiranim susjednim uređajima. Reklamni se paketi mogu konfigurirati tako da pri njihovu skeniranju promatrač, po potrebi, može zatražiti dodatne informacije od odašiljača posebnim zahtjevom. Paket zahtjeva za skeniranje ne može sadržavati nikakve korisničke podatke.
+
+Postoji nekoliko nedostataka ovakve vrste povezivanja. Ova topologija podržava isključivo jednosmjernu vezu, što znači da odašiljač ne može primiti nikakvu korisnu informaciju od promatrača. Isto tako, svi uređaji u blizini primaju odašiljane pakete, te nije moguće slati podatke samo jednom uređaju. 
+
+Posljednji način jest mrežna topologija (engl. \textit{mesh}). BLE \textit{Mesh} koristi se za uspostavljanje komunikacije više-prema-više uređaja (n:n). Omogućuje stvaranje složenih velikih mreža i idealan je za nadzor, kontrolu i sustave automatizacije gdje je potrebna pouzdana međusobna komunikacija mnoštva uređaja. Ova metoda povećava domet i pokrivenost izvan BLE RF dometa, te pomaže u izbjegavanju fizičkih prepreka. Sigurnost je obavezna u ovom načinu rada, te je podržana BLE stogom. \cite{ble_profiles}
 
 \eject
