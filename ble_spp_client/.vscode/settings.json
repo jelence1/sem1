@@ -1,9 +1,0 @@
-{
-  "C_Cpp.intelliSenseEngine": "Tag Parser",
-  "idf.portWin": "COM12",
-  "idf.adapterTargetName": "esp32c3",
-  "idf.openOcdConfigs": [
-    "board/esp32c3-ftdi.cfg"
-  ],
-  "idf.flashType": "UART"
-}
